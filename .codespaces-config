@@ -6,7 +6,38 @@ WC_PKG="@vanta/web-client"
 # aliases
 alias gt="turbo generate-types --filter @vanta/web --filter $WC_PKG"
 alias gtc="turbo generate-types --filter $WC_PKG"
-alias syncdot="(cd /workspaces/.codespaces/.persistedshare/dotfiles && git pull) && rz"
+
+# Better syncdot function that can handle local changes
+syncdot() {
+  local dotfiles_dir="/workspaces/.codespaces/.persistedshare/dotfiles"
+  echo "Syncing dotfiles from $dotfiles_dir..."
+  
+  # Save current directory
+  local current_dir=$(pwd)
+  
+  # Go to dotfiles directory
+  cd "$dotfiles_dir" || return 1
+  
+  # Check for local changes
+  if [[ -n "$(git status --porcelain)" ]]; then
+    echo "Local changes detected in dotfiles."
+    echo "Committing local changes before pulling..."
+    git add .
+    git commit -m "Auto-commit local Codespace changes"
+  fi
+  
+  # Pull latest changes
+  git pull
+  
+  # Go back to original directory
+  cd "$current_dir"
+  
+  # Reload zsh configuration
+  echo "Reloading zsh configuration..."
+  source ~/.zshrc
+  
+  echo "Dotfiles sync complete!"
+}
 
 alias web_start="docker-compose up --detach web.internal web-client.internal"
 alias rstc="restart_container"
