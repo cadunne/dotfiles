@@ -46,12 +46,12 @@ alias gaa='git add --all'
 alias gap='git add --patch'
 
 # Git log aliases
-alias gl='git log'
-alias glo='git log --oneline'
-alias glg='git log --graph --oneline --decorate'
-alias gln='git log --name-only'
-alias glp='git log -p'  # shows diffs
-alias gls='git log --stat'  # shows files changed
+alias glog='git log'
+alias glogo='git log --oneline'
+alias glogg='git log --graph --oneline --decorate'
+alias glogn='git log --name-only'
+alias glogp='git log -p'  # shows diffs
+alias glogs='git log --stat'  # shows files changed
 
 # Git fetch/pull/push aliases
 alias gf='git fetch'
