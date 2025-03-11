@@ -148,27 +148,37 @@ gri() {
     # If first argument is a number, use it as the number of commits
     num_commits=$1
     echo "Rebasing interactively against HEAD~$num_commits..."
-    git rebase -i HEAD~$num_commits
+    EDITOR="cursor --wait" git rebase -i HEAD~$num_commits
   elif [[ -n "$1" ]]; then
     # If argument is provided and not a number, use it as the branch name
     echo "Rebasing interactively against $1..."
-    git rebase -i $1
+    EDITOR="cursor --wait" git rebase -i $1
   else
     # Otherwise, rebase against the fork point from main branch
     local fork_point=$(git merge-base HEAD $base_branch)
     echo "Rebasing interactively against fork point from $base_branch..."
-    git rebase -i $fork_point
+    EDITOR="cursor --wait" git rebase -i $fork_point
   fi
 }
 
-# Configure Git to use Cursor as the editor
+# Configure Git to use an appropriate editor
 configure_git_editor() {
-  echo "Setting Cursor as the Git editor..."
-  git config --global core.editor "cursor --wait"
+  if command -v cursor &> /dev/null; then
+    echo "Setting Cursor as the Git editor..."
+    git config --global core.editor "cursor --wait"
+  elif command -v code &> /dev/null; then
+    echo "Setting VS Code as the Git editor..."
+    git config --global core.editor "code --wait"
+  elif command -v vim &> /dev/null; then
+    echo "Setting Vim as the Git editor..."
+    git config --global core.editor "vim"
+  elif command -v nano &> /dev/null; then
+    echo "Setting Nano as the Git editor..."
+    git config --global core.editor "nano"
+  else
+    echo "No suitable editor found. Using default Git editor."
+  fi
 }
 
 # Run git editor configuration automatically when this file is sourced
-# Only if we're in a coding environment with Cursor available
-if command -v cursor &> /dev/null; then
-  configure_git_editor
-fi
+configure_git_editor
