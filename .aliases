@@ -32,11 +32,11 @@ alias gbr='git branch --remote'
 alias gco='git checkout'
 alias gcb='git checkout -b'
 alias gcd='git checkout develop'
-alias gcmb='git checkout $(git_main_branch)'
+alias gcm='git checkout $(git_main_branch)'
 
 # Git commit aliases
 alias gc='git commit'
-alias gcm='git commit -m'
+alias gcam='git commit -m'
 alias gca='git commit --amend'
 alias gcan="git add --all && git commit --amend --no-edit"
 
