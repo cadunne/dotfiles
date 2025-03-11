@@ -18,6 +18,11 @@ alias logs_web="docker compose logs web.internal --tail 100 --no-log-prefix"
 alias logs_wc="docker compose logs web-client.internal --tail 100 --no-log-prefix"
 
 alias yw="nocorrect yarn workspace"
+alias ypp="yarn post-pull"
+
+alias mdwc='make dev-replace web-client'
+alias mdw='make dev-replace web'
+alias mds='make dev-storybook'
 
 # Functions
 login_link(){
@@ -27,6 +32,12 @@ login_link(){
   echo "{$json_line}" | jq -r .loginLink
 }
 
+# Git convenience functions
+gcaam() {
+  # Function to git add all and commit with a message
+  # Usage: gcaam your commit message here (no quotes needed)
+  git add --all && git commit -m "$*"
+}
 
 function restart_container() {
   docker_ps | grep $1 | xargs -I {} docker restart {}

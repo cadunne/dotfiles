@@ -13,7 +13,7 @@ fi
 # ZSH options
 ZSH_DISABLE_COMPFIX="true"
 ENABLE_CORRECTION="true"
-COMPLETION_WAITING_DOTS="true"
+# COMPLETION_WAITING_DOTS="true"
 
 # Git completion performance settings
 zstyle ':completion:*' accept-exact-dirs true
