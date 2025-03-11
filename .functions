@@ -177,3 +177,16 @@ gri() {
 export GIT_SEQUENCE_EDITOR="cursor --wait"
 export EDITOR="cursor --wait"
 
+# Create new branch with username prefix
+gcoo() {
+  # Create a new branch with username prefix
+  # Usage: gcoo branch-name  (creates cadunne/branch-name)
+  if [ -z "$1" ]; then
+    echo "Error: Branch name is required"
+    echo "Usage: gcoo branch-name"
+    return 1
+  fi
+  
+  git checkout -b cadunne/$1
+}
+
