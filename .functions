@@ -160,3 +160,15 @@ gri() {
     git rebase -i $fork_point
   fi
 }
+
+# Configure Git to use Cursor as the editor
+configure_git_editor() {
+  echo "Setting Cursor as the Git editor..."
+  git config --global core.editor "cursor --wait"
+}
+
+# Run git editor configuration automatically when this file is sourced
+# Only if we're in a coding environment with Cursor available
+if command -v cursor &> /dev/null; then
+  configure_git_editor
+fi
