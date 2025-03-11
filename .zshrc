@@ -1,13 +1,22 @@
-# ZSH config
-ZSH_THEME="bureau"
+# ZSH configuration
+export ZSH="$HOME/.oh-my-zsh"
+export ZSHRC="$HOME/.zshrc"
+
+# Theme and plugin settings
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(git brew kubectl kube-ps1 zsh-autosuggestions zsh-syntax-highlighting)
+
+# Enable Powerlevel10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ZSH options
+ZSH_DISABLE_COMPFIX="true"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
-ZSH_DISABLE_COMPFIX="true"
 
-##########
-# HISTORY
-##########
-
+# History configuration
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
@@ -32,63 +41,56 @@ setopt SHARE_HISTORY
 # Execute commands using history (e.g.: using !$) immediately:
 unsetopt HIST_VERIFY
 
-# Uncomment to add kube settings to prompt
-# USING_KUBE=1
-
+# Environment variables
 export LANG=en_US.UTF-8
-export ZSH="$HOME/.oh-my-zsh"
-export ZSHRC="$HOME/.zshrc"
 export DOCKER_BUILDKIT=1
 export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.cargo/bin:/usr/local/opt/openssl@1.1/bin:$HOME/.local/bin"
-autoload -Uz compinit
-compinit
 
-plugins=(git brew kubectl kube-ps1)
+# Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
+# Uncomment to add kube settings to prompt
+# USING_KUBE=1
 if [[ -n "$USING_KUBE" ]]; then
     RPROMPT=$RPROMPT'$(kube_ps1)'
 fi
 
-
+# Load custom configuration files
 for file in ~/.{aliases,functions,path,dockerfunc,extra,exports}; do
-	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-		source "$file"
-	fi
+    if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+        source "$file"
+    fi
 done
 unset file
 
-
-
-# only add these if we are not in a codespace
+# Environment-specific configurations
 if [[ -z "$CODESPACES" ]]; then
-   source ~/.local-config
+    # Local environment
+    [[ -f ~/.local-config ]] && source ~/.local-config
 else
-    source ~/.codespaces-config
+    # Codespaces environment
+    [[ -f ~/.codespaces-config ]] && source ~/.codespaces-config
 fi
 
-# Node tooling
+# Node.js environment setup
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm use default
-source <(npm completion)
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    source "$NVM_DIR/nvm.sh"  # Load NVM
+    source "$NVM_DIR/bash_completion"  # Load NVM bash completion
+    nvm use default &>/dev/null
+fi
 
-autoload -Uz compinit
-compinit -i
+# NPM completion
+which npm &>/dev/null && source <(npm completion)
 
+# Load poetry if installed
+[[ -d "$HOME/.poetry/bin" ]] && export PATH="$HOME/.poetry/bin:$PATH"
 
+# Load asdf if installed
+[[ -f /usr/local/opt/asdf/libexec/asdf.sh ]] && source /usr/local/opt/asdf/libexec/asdf.sh
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/ryanquinn/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ryanquinn/google-cloud-sdk/path.zsh.inc'; fi
+# Load iTerm2 shell integration if available
+[[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/ryanquinn/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ryanquinn/google-cloud-sdk/completion.zsh.inc'; fi
-
-
-export PATH="$HOME/.poetry/bin:$PATH"
-
-
-if [ -f ./usr/local/opt/asdf/libexec/asdf.sh ]; then ./usr/local/opt/asdf/libexec/asdf.sh; fi
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
