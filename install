@@ -8,36 +8,18 @@ if [ -d ~/.oh-my-zsh ]; then
     echo "Oh My Zsh is already installed"
 else
     echo "Installing Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    # Using the -y flag for non-interactive installation
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
 # Install Zsh plugins and themes
 echo "Installing Zsh plugins and themes..."
-echo "==========================================================="
-echo "             Installing zsh-autosuggestions                 "
-echo "-----------------------------------------------------------"
-if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]; then
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-fi
 
-echo "==========================================================="
-echo "             Installing zsh-syntax-highlighting             "
-echo "-----------------------------------------------------------"
-if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]; then
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-fi
-
-echo "==========================================================="
-echo "             Installing powerlevel10k                       "
-echo "-----------------------------------------------------------"
-if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-fi
-
-echo "Symlinking dotfiles..."
-ln -sf $DIR/.functions ~/.functions
+# Symlinking basic dotfiles only
+echo "Symlinking essential dotfiles..."
 ln -sf $DIR/.zshrc ~/.zshrc
 ln -sf $DIR/.aliases ~/.aliases
+ln -sf $DIR/.functions ~/.functions
 ln -sf $DIR/.p10k.zsh ~/.p10k.zsh
 
 # Create these files if they don't exist to prevent errors
@@ -48,66 +30,82 @@ touch ~/.local-config
 [ -f $DIR/.codespaces-config ] && ln -sf $DIR/.codespaces-config ~/.codespaces-config
 [ -f $DIR/.local-config ] && ln -sf $DIR/.local-config ~/.local-config
 
-# Only setup Docker config if it exists
-if [ -f $DIR/docker-config.json ]; then
-    mkdir -p ~/.docker
-    ln -sf $DIR/docker-config.json ~/.docker/config.json
-fi
+# COMMENTED OUT: Optional macOS configurations
+# if [[ $OSTYPE == 'darwin'* ]]; then
+#     read -q "REPLY?Do you want to configure macOS settings? (y/n) "
+#     echo ""
+#     if [[ $REPLY =~ ^[Yy]$ ]]; then
+#         echo "Configuring macOS settings..."
+#         
+#         # Screenshots
+#         [ ! -d ~/screenshots ] && mkdir ~/screenshots
+#         defaults write com.apple.screencapture location ~/screenshots
+#         defaults write com.apple.screencapture "show-thumbnail" -bool "false"
+#         killall SystemUIServer
+#         
+#         # Dock settings
+#         defaults write com.apple.dock "autohide" -bool "true"
+#         defaults write com.apple.dock "orientation" -string "left"
+#         killall Dock
+#         
+#         # Finder settings
+#         defaults write com.apple.finder "ShowPathbar" -bool "true" 
+#         killall Finder
+#         
+#         echo "macOS configuration complete."
+#     fi
+# fi
 
-# macOS-specific configurations (optional)
-if [[ $OSTYPE == 'darwin'* ]]; then
-    read -q "REPLY?Do you want to configure macOS settings? (y/n) "
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "Configuring macOS settings..."
-        
-        # Screenshots
-        [ ! -d ~/screenshots ] && mkdir ~/screenshots
-        defaults write com.apple.screencapture location ~/screenshots
-        defaults write com.apple.screencapture "show-thumbnail" -bool "false"
-        killall SystemUIServer
-        
-        # Dock settings
-        defaults write com.apple.dock "autohide" -bool "true"
-        defaults write com.apple.dock "orientation" -string "left"
-        killall Dock
-        
-        # Finder settings
-        defaults write com.apple.finder "ShowPathbar" -bool "true" 
-        killall Finder
-        
-        echo "macOS configuration complete."
-    fi
-fi
+# COMMENTED OUT: Make sure default shell is set to zsh
+# if [[ "$SHELL" != *"zsh"* ]]; then
+#     echo "Setting zsh as default shell..."
+#     chsh -s $(which zsh)
+# fi
 
-# Make sure default shell is set to zsh
-if [[ "$SHELL" != *"zsh"* ]]; then
-    echo "Setting zsh as default shell..."
-    chsh -s $(which zsh)
-fi
+# COMMENTED OUT: NVM installation
+# read -q "REPLY?Do you want to install Node.js with NVM? (y/n) "
+# echo ""
+# if [[ $REPLY =~ ^[Yy]$ ]]; then
+#     if [ -z "$(command -v nvm)" ]; then
+#         echo "Installing NVM..."
+#         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+#         export NVM_DIR="$HOME/.nvm"
+#         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+#         echo "Installing Node.js LTS..."
+#         nvm install --lts
+#     else
+#         echo "NVM is already installed."
+#     fi
+# fi
 
-# Install NVM (optional)
-read -q "REPLY?Do you want to install Node.js with NVM? (y/n) "
+# COMMENTED OUT: Plugin installations to be done manually later
+# These can be hanging points during initialization
+# echo "=============================================================="
+# echo "             Installing zsh-autosuggestions                 "
+# echo "------------------------------------------------------------"
+# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]; then
+#     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# fi
+# 
+# echo "=============================================================="
+# echo "             Installing zsh-syntax-highlighting             "
+# echo "------------------------------------------------------------"
+# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]; then
+#     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# fi
+# 
+# echo "=============================================================="
+# echo "             Installing powerlevel10k                       "
+# echo "------------------------------------------------------------"
+# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
+#     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+# fi
+
+echo "Minimal dotfiles setup complete!"
 echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    if [ -z "$(command -v nvm)" ]; then
-        echo "Installing NVM..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        echo "Installing Node.js LTS..."
-        nvm install --lts
-    else
-        echo "NVM is already installed."
-    fi
-fi
-
-echo "Configuring shell..."
-echo "Done. Your dotfiles have been installed!"
-echo ""
-echo "For the best experience with Powerlevel10k:"
-echo "1. Install the recommended fonts from https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k"
-echo "2. Run 'p10k configure' to customize your prompt"
-echo ""
-echo "To update your dotfiles in the future, run: ./update.sh"
+echo "NOTE: Some features were commented out for Codespaces compatibility."
+echo "Once this works, you can manually install the plugins:"
+echo "- zsh-autosuggestions"
+echo "- zsh-syntax-highlighting"
+echo "- powerlevel10k theme"
 
