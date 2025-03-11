@@ -124,3 +124,45 @@ install_portainer() {
     -v portainer_data:/data portainer/portainer-ce:latest \
     --http-enabled
 }
+
+# Git convenience functions
+gcaam() {
+  # Function to git add all and commit with a message without needing quotes
+  # Usage: gcaam your commit message here (no quotes needed)
+  git add --all && git commit -m "$*"
+}
+
+# Git reset and cleaning functions
+git_reset_to_remote() {
+  # Reset local branch to match remote branch
+  # Usage: git_reset_to_remote [branch]
+  local branch=${1:-$(git rev-parse --abbrev-ref HEAD)}
+  local remote_branch="origin/$branch"
+  
+  echo "Resetting $branch to match $remote_branch..."
+  git fetch origin
+  git reset --hard "$remote_branch"
+  echo "Reset complete!"
+}
+
+git_undo_to() {
+  # Reset to a specific commit but keep changes
+  # Usage: git_undo_to <commit-hash>
+  if [ -z "$1" ]; then
+    echo "Error: Please provide a commit hash"
+    echo "Usage: git_undo_to <commit-hash>"
+    return 1
+  fi
+  
+  git reset --soft "$1"
+  echo "Reset to $1 - changes are staged"
+}
+
+git_clean_preview() {
+  # Preview what git clean would remove
+  # Usage: git_clean_preview
+  echo "Files that would be removed by 'git clean -fd':"
+  git clean -fd --dry-run
+}
+
+# Fast git checkout function
