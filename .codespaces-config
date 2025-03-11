@@ -42,3 +42,38 @@ lint_ts(){
   echo "Linted in $runtime seconds"
 }
 
+# GitHub Codespaces specific configuration
+
+# Set up Codespaces environment
+echo "Setting up Codespaces environment..."
+
+# Ensure git aliases work properly
+if [ -f ~/.aliases ]; then
+  echo "Loading Git aliases..."
+  source ~/.aliases
+fi
+
+# Ensure git custom functions work properly
+if [ -f ~/.functions ]; then
+  echo "Loading Git functions..."
+  source ~/.functions
+fi
+
+# Ensure custom zsh settings are loaded
+if [ -f ~/.zsh_custom ]; then
+  echo "Loading custom ZSH settings..."
+  source ~/.zsh_custom
+fi
+
+# Install fzf if it's not already installed
+if ! command -v fzf >/dev/null 2>&1; then
+  echo "Installing fzf for faster git operations..."
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all
+fi
+
+# Verify that the git aliases are properly loaded
+alias | grep "^g" | grep "git" | wc -l | xargs -I {} echo "Loaded {} git aliases"
+
+echo "Codespaces configuration complete!"
+
