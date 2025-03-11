@@ -143,42 +143,36 @@ gri() {
   
   local base_branch="$(git_main_branch)"
   local num_commits
+  local git_editor
+  
+  # Determine the appropriate editor
+  if command -v cursor &> /dev/null; then
+    git_editor="cursor --wait"
+  elif command -v code &> /dev/null; then
+    git_editor="code --wait"
+  elif command -v vim &> /dev/null; then
+    git_editor="vim"
+  else
+    git_editor="nano"  # Fallback to nano which is almost always available
+  fi
   
   if [[ "$1" =~ ^[0-9]+$ ]]; then
     # If first argument is a number, use it as the number of commits
     num_commits=$1
     echo "Rebasing interactively against HEAD~$num_commits..."
-    EDITOR="cursor --wait" git rebase -i HEAD~$num_commits
+    EDITOR="$git_editor" git rebase -i HEAD~$num_commits
   elif [[ -n "$1" ]]; then
     # If argument is provided and not a number, use it as the branch name
     echo "Rebasing interactively against $1..."
-    EDITOR="cursor --wait" git rebase -i $1
+    EDITOR="$git_editor" git rebase -i $1
   else
     # Otherwise, rebase against the fork point from main branch
     local fork_point=$(git merge-base HEAD $base_branch)
     echo "Rebasing interactively against fork point from $base_branch..."
-    EDITOR="cursor --wait" git rebase -i $fork_point
+    EDITOR="$git_editor" git rebase -i $fork_point
   fi
 }
 
-# Configure Git to use an appropriate editor
-configure_git_editor() {
-  if command -v cursor &> /dev/null; then
-    echo "Setting Cursor as the Git editor..."
-    git config --global core.editor "cursor --wait"
-  elif command -v code &> /dev/null; then
-    echo "Setting VS Code as the Git editor..."
-    git config --global core.editor "code --wait"
-  elif command -v vim &> /dev/null; then
-    echo "Setting Vim as the Git editor..."
-    git config --global core.editor "vim"
-  elif command -v nano &> /dev/null; then
-    echo "Setting Nano as the Git editor..."
-    git config --global core.editor "nano"
-  else
-    echo "No suitable editor found. Using default Git editor."
-  fi
-}
+# Set Git sequence editor for interactive rebase operations
+export GIT_SEQUENCE_EDITOR="cursor --wait"
 
-# Run git editor configuration automatically when this file is sourced
-configure_git_editor
