@@ -1,0 +1,33 @@
+# Custom ZSH settings for performance improvements
+
+# More aggressive git completion performance settings
+__git_command_successful () {
+  # Disable 0 return code check for git operations - makes completion faster
+  return 0
+}
+
+# Disable all git status checks for prompt and completion
+GIT_OPTIONAL_LOCKS=0
+__git_files () { 
+  _wanted files expl 'local files' _files     
+}
+
+# Speed up git branch completion by disabling sorting
+__git_heads() {
+  local expl
+  declare -a heads
+  
+  heads=(${${(f)"$(_call_program heads git for-each-ref --format=%(refname:short) refs/heads 2>/dev/null)"}##*/})
+  
+  _wanted heads expl 'local branch' compadd -Q -a heads
+}
+
+# Make git checkout completion faster by disabling sorting
+__git_branch_names() {
+  local expl
+  declare -a branch_names
+  
+  branch_names=(${${(f)"$(_call_program branchrefs git for-each-ref --format=%(refname:short) refs/heads 2>/dev/null)"}##*/})
+  
+  _wanted branch-names expl branch compadd -a branch_names
+} 

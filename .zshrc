@@ -3,7 +3,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # Theme and plugin settings
 ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git brew kubectl kube-ps1 zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(gitfast brew kubectl kube-ps1 zsh-autosuggestions zsh-syntax-highlighting)
 
 # Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -14,6 +14,16 @@ fi
 ZSH_DISABLE_COMPFIX="true"
 ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="true"
+
+# Git completion performance settings
+zstyle ':completion:*' accept-exact-dirs true
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path $ZSH_CACHE_DIR
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' group-name ''
 
 # History configuration
 HISTFILE=$HOME/.zsh_history
@@ -50,6 +60,9 @@ export DOCKER_BUILDKIT=1
 
 # Load Oh My Zsh
 source $ZSH/oh-my-zsh.sh
+
+# Source custom performance settings
+[[ -f ~/.zsh_custom ]] && source ~/.zsh_custom
 
 # Load custom configuration files
 for file in ~/.{aliases,functions,path,dockerfunc,extra,exports}; do
