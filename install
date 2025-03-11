@@ -80,26 +80,26 @@ touch ~/.local-config
 
 # COMMENTED OUT: Plugin installations to be done manually later
 # These can be hanging points during initialization
-# echo "=============================================================="
-# echo "             Installing zsh-autosuggestions                 "
-# echo "------------------------------------------------------------"
-# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]; then
-#     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-# fi
-# 
-# echo "=============================================================="
-# echo "             Installing zsh-syntax-highlighting             "
-# echo "------------------------------------------------------------"
-# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]; then
-#     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-# fi
-# 
-# echo "=============================================================="
-# echo "             Installing powerlevel10k                       "
-# echo "------------------------------------------------------------"
-# if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
-#     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
-# fi
+echo "=============================================================="
+echo "             Installing zsh-autosuggestions                 "
+echo "------------------------------------------------------------"
+if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]; then
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+fi
+
+echo "=============================================================="
+echo "             Installing zsh-syntax-highlighting             "
+echo "------------------------------------------------------------"
+if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]; then
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+fi
+
+echo "=============================================================="
+echo "             Installing powerlevel10k                       "
+echo "------------------------------------------------------------"
+if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+fi
 
 echo "Minimal dotfiles setup complete!"
 echo ""
