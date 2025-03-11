@@ -21,7 +21,7 @@ fi
 # Git aliases - basic
 alias g='git'
 alias gs='git status --short'
-alias gss='git status'
+alias gst='git status'
 
 # Git branch aliases
 alias gb='git branch'
@@ -81,10 +81,10 @@ alias gribase='gri'  # Smart interactive rebase
 alias gcount='git_ahead'  # Count commits ahead of main
 
 # Git stash aliases
-alias gst='git stash'
-alias gsta='git stash apply'
-alias gstp='git stash pop'
-alias gstl='git stash list'
+alias gsta='git stash'
+alias gstaa='git stash apply'
+alias gstap='git stash pop'
+alias gstal='git stash list'
 
 # Combined workflow aliases
 alias gac='git add --all && git commit -m'
