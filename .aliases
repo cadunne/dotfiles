@@ -32,7 +32,7 @@ alias gbr='git branch --remote'
 alias gco='git checkout'
 alias gcb='git checkout -b'
 alias gcd='git checkout develop'
-alias gcm='git checkout $(git_main_branch)'
+alias gcmb='git checkout $(git_main_branch)'
 
 # Git commit aliases
 alias gc='git commit'
