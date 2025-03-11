@@ -15,6 +15,13 @@ fi
 # Install Zsh plugins and themes
 echo "Installing Zsh plugins and themes..."
 
+# Set zsh as default shell for SSH connections
+echo "Setting zsh as default shell..."
+# Method that works for both regular Linux and Codespaces
+if [[ "$SHELL" != *"zsh"* ]]; then
+    sudo chsh "$(id -un)" --shell "/usr/bin/zsh" || chsh -s $(which zsh) || echo "Could not change shell automatically"
+fi
+
 # Symlinking basic dotfiles only
 echo "Symlinking essential dotfiles..."
 ln -sf $DIR/.zshrc ~/.zshrc
@@ -78,8 +85,7 @@ touch ~/.local-config
 #     fi
 # fi
 
-# COMMENTED OUT: Plugin installations to be done manually later
-# These can be hanging points during initialization
+# Install plugins
 echo "=============================================================="
 echo "             Installing zsh-autosuggestions                 "
 echo "------------------------------------------------------------"
@@ -101,11 +107,8 @@ if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
 fi
 
-echo "Minimal dotfiles setup complete!"
+echo "Dotfiles setup complete!"
 echo ""
-echo "NOTE: Some features were commented out for Codespaces compatibility."
-echo "Once this works, you can manually install the plugins:"
-echo "- zsh-autosuggestions"
-echo "- zsh-syntax-highlighting"
-echo "- powerlevel10k theme"
+echo "Your prompt is now configured with the robbyrussell theme style using Powerlevel10k for performance."
+echo "Zsh will be your default shell in both VS Code terminals and SSH connections."
 
