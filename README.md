@@ -2,6 +2,9 @@
 
 Modern shell setup with Oh My Zsh, Powerlevel10k, and useful plugins for an enhanced terminal experience.
 
+> **⚠️ DISCLAIMER ⚠️**  
+> This dotfiles repository was inspired by [ryanquinn3/dotfiles](https://github.com/ryanquinn3/dotfiles/tree/master) and has been reorganized with assistance from Cursor AI. While it should work as expected, it hasn't been thoroughly tested in all environments. Use at your own risk and feel free to report any issues you encounter.
+
 ## Features
 
 - **Oh My Zsh**: A delightful, open source framework for Zsh
@@ -13,6 +16,8 @@ Modern shell setup with Oh My Zsh, Powerlevel10k, and useful plugins for an enha
   - kube-ps1: Kubernetes prompt integration
   - zsh-autosuggestions: Fish-like command suggestions
   - zsh-syntax-highlighting: Syntax highlighting for the shell
+- **Simple Configuration**: Minimalist approach to shell setup
+- **GitHub Codespaces Support**: Works seamlessly in GitHub Codespaces
 
 ## Installation
 
@@ -22,12 +27,27 @@ Run the install script:
 ./install
 ```
 
+The script will:
+1. Install Oh My Zsh (if not already installed)
+2. Install Powerlevel10k theme and plugins
+3. Symlink configuration files to your home directory
+4. Optionally configure macOS settings (screenshots, dock, finder)
+5. Optionally install Node.js with NVM
+
 ### Post-Installation
 
 For the best experience with Powerlevel10k:
 
 1. Install the recommended fonts from [Powerlevel10k's README](https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k)
 2. Run `p10k configure` to customize your prompt
+
+## Updating
+
+To update Oh My Zsh, Powerlevel10k theme, and plugins:
+
+```bash
+./update.sh
+```
 
 ## What's Included
 
@@ -40,7 +60,7 @@ For the best experience with Powerlevel10k:
 
 ## VS Code Integration
 
-For the best experience in VS Code, add these settings:
+For the best experience in VS Code, these settings are recommended:
 
 ```json
 {
@@ -48,6 +68,10 @@ For the best experience in VS Code, add these settings:
     "terminal.integrated.defaultProfile.linux": "zsh"
 }
 ```
+
+## GitHub Codespaces
+
+This dotfiles repository works with GitHub Codespaces. When creating a new Codespace, these dotfiles will be automatically applied if you've configured your GitHub account to use them.
 
 ## Customization
 

@@ -34,68 +34,80 @@ if [ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k ]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
 fi
 
-function configure_screenshot_storage(){
-	# Setup the screenshots directory and have the OS store all screenshots there
-	[ ! -d ~/screenshots ] && mkdir ~/screenshots
-	defaults write com.apple.screencapture location ~/screenshots
-	defaults write com.apple.screencapture "show-thumbnail" -bool "false" 
-	killall SystemUIServer
-}
-
-function configure_dock_settings(){
-	defaults write com.apple.dock "autohide" -bool "true"
-	defaults write com.apple.dock "orientation" -string "left"
-	killall Dock
-}
-
-function configure_finder() {
-	defaults write com.apple.finder "ShowPathbar" -bool "true" && killall Finder
-}
-
-function load_nvm(){
-	export NVM_DIR="/usr/local/share/nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-}
-
-# Install NVM if not already installed
-if [ -z "$(which nvm)" ]; then
-	echo "Installing NVM..."
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-fi
-
-load_nvm
-
 echo "Symlinking dotfiles..."
 ln -sf $DIR/.functions ~/.functions
 ln -sf $DIR/.zshrc ~/.zshrc
 ln -sf $DIR/.aliases ~/.aliases
-ln -sf $DIR/.codespaces-config ~/.codespaces-config
-ln -sf $DIR/.local-config ~/.local-config
 ln -sf $DIR/.p10k.zsh ~/.p10k.zsh
-mkdir -p ~/.docker
-ln -sf $DIR/docker-config.json ~/.docker/config.json
 
+# Create these files if they don't exist to prevent errors
+touch ~/.codespaces-config
+touch ~/.local-config
+
+# Only link the config files if they exist in the repo
+[ -f $DIR/.codespaces-config ] && ln -sf $DIR/.codespaces-config ~/.codespaces-config
+[ -f $DIR/.local-config ] && ln -sf $DIR/.local-config ~/.local-config
+
+# Only setup Docker config if it exists
+if [ -f $DIR/docker-config.json ]; then
+    mkdir -p ~/.docker
+    ln -sf $DIR/docker-config.json ~/.docker/config.json
+fi
+
+# macOS-specific configurations (optional)
 if [[ $OSTYPE == 'darwin'* ]]; then
-	echo -ne "Updating MacOS UI config...\033[0K\r"
-	configure_screenshot_storage
-	configure_dock_settings
-	configure_finder
-	echo -e "Updating MacOS UI config... Done"
+    read -q "REPLY?Do you want to configure macOS settings? (y/n) "
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Configuring macOS settings..."
+        
+        # Screenshots
+        [ ! -d ~/screenshots ] && mkdir ~/screenshots
+        defaults write com.apple.screencapture location ~/screenshots
+        defaults write com.apple.screencapture "show-thumbnail" -bool "false"
+        killall SystemUIServer
+        
+        # Dock settings
+        defaults write com.apple.dock "autohide" -bool "true"
+        defaults write com.apple.dock "orientation" -string "left"
+        killall Dock
+        
+        # Finder settings
+        defaults write com.apple.finder "ShowPathbar" -bool "true" 
+        killall Finder
+        
+        echo "macOS configuration complete."
+    fi
 fi
 
 # Make sure default shell is set to zsh
 if [[ "$SHELL" != *"zsh"* ]]; then
-	echo "Setting zsh as default shell..."
-	chsh -s $(which zsh)
+    echo "Setting zsh as default shell..."
+    chsh -s $(which zsh)
 fi
 
-echo "Installing node..."
-nvm install --lts
+# Install NVM (optional)
+read -q "REPLY?Do you want to install Node.js with NVM? (y/n) "
+echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [ -z "$(command -v nvm)" ]; then
+        echo "Installing NVM..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        echo "Installing Node.js LTS..."
+        nvm install --lts
+    else
+        echo "NVM is already installed."
+    fi
+fi
 
 echo "Configuring shell..."
-source ~/.zshrc
 echo "Done. Your dotfiles have been installed!"
-echo "Note: For the full Powerlevel10k experience, install the recommended fonts from https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k"
-echo "Then run 'p10k configure' to customize your prompt."
+echo ""
+echo "For the best experience with Powerlevel10k:"
+echo "1. Install the recommended fonts from https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k"
+echo "2. Run 'p10k configure' to customize your prompt"
+echo ""
+echo "To update your dotfiles in the future, run: ./update.sh"
 
