@@ -68,10 +68,16 @@ alias gds='git diff --staged'
 
 # Git reset/clean aliases
 alias grh='git reset --hard'
+alias grhh='git reset --hard HEAD'
 alias gclean='git clean -fd'  # Remove untracked files and directories
-alias gnuke='git reset --hard && git clean -fd'  # Full reset: remove all changes and untracked files
-alias gundo='git reset --soft HEAD~1'  # Undo last commit, keep changes staged
-alias gwipe='git add -A && git commit -qm "WIPE SAVEPOINT" && git reset HEAD~1 --hard'  # Wipe all changes but allow recovery with reflog
+
+# Git rebase aliases
+alias grb='git rebase'
+alias grba='git rebase --abort'
+alias grbc='git rebase --continue'
+alias grbs='git rebase --skip'
+alias gribase='gri'  # Smart interactive rebase
+alias gcount='git_ahead'  # Count commits ahead of main
 
 # Git stash aliases
 alias gst='git stash'

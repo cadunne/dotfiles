@@ -132,6 +132,62 @@ gcaam() {
   git add --all && git commit -m "$*"
 }
 
+# Smart interactive rebase function
+gri() {
+  # Interactive rebase with smart commit counting
+  # Usage: 
+  #   gri            - Rebase interactively against where current branch diverged from main branch
+  #   gri 5          - Rebase interactively against HEAD~5
+  #   gri main       - Rebase interactively against main branch
+  #   gri <branch>   - Rebase interactively against specified branch
+  
+  local base_branch="$(git_main_branch)"
+  local num_commits
+  
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    # If first argument is a number, use it as the number of commits
+    num_commits=$1
+    echo "Rebasing interactively against HEAD~$num_commits..."
+    git rebase -i HEAD~$num_commits
+  elif [[ -n "$1" ]]; then
+    # If argument is provided and not a number, use it as the branch name
+    echo "Rebasing interactively against $1..."
+    git rebase -i $1
+  else
+    # Otherwise, rebase against the fork point from main branch
+    local fork_point=$(git merge-base HEAD $base_branch)
+    echo "Rebasing interactively against fork point from $base_branch..."
+    git rebase -i $fork_point
+  fi
+}
+
+# Count commits ahead of main branch
+git_ahead() {
+  # Show how many commits the current branch is ahead of main
+  # Usage: git_ahead [branch]
+  local base_branch=${1:-$(git_main_branch)}
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+  local ahead_count
+  
+  if [ "$current_branch" = "$base_branch" ]; then
+    echo "You're on $base_branch branch"
+    return
+  fi
+  
+  # Get the fork point - where this branch diverged from main
+  local fork_point=$(git merge-base HEAD $base_branch)
+  
+  # Count commits ahead of fork point
+  ahead_count=$(git rev-list --count HEAD ^$fork_point)
+  
+  echo "Branch '$current_branch' is $ahead_count commit(s) ahead of $base_branch"
+  echo "Fork point: $(git log -1 --format=%h $fork_point) ($(git log -1 --format=%s $fork_point))"
+  
+  # Show a compact log of the commits
+  echo "Commits in this branch:"
+  git log --oneline $fork_point..HEAD | cat
+}
+
 # Git reset and cleaning functions
 git_reset_to_remote() {
   # Reset local branch to match remote branch
