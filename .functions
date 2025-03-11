@@ -176,4 +176,5 @@ gri() {
 # Set Git editors for interactive rebase operations
 export GIT_SEQUENCE_EDITOR="cursor --wait"
 export EDITOR="cursor --wait"
+export GIT_EDITOR="cursor --wait"
 

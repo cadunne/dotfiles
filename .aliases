@@ -65,6 +65,7 @@ alias gpr='git pull --rebase'
 # Git diff aliases
 alias gd='git diff'
 alias gds='git diff --staged'
+alias gdn='git diff --name-only'
 
 # Git reset/clean aliases
 alias grh='git reset --hard'
