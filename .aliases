@@ -74,6 +74,7 @@ alias gclean='git clean -fd'  # Remove untracked files and directories
 
 # Git rebase aliases
 alias grb='git rebase'
+alias grbm='git rebase main'
 alias grba='git rebase --abort'
 alias grbc='git rebase --continue'
 alias grbs='git rebase --skip'
