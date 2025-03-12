@@ -173,10 +173,6 @@ gri() {
   fi
 }
 
-# Set Git editors for interactive rebase operations
-export GIT_SEQUENCE_EDITOR="cursor --wait"
-export EDITOR="cursor --wait"
-
 # Create new branch with username prefix
 gcoo() {
   # Create a new branch with username prefix

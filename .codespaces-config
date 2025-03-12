@@ -1,6 +1,10 @@
 # config for codespaces
-export GIT_EDITOR="code --wait"
-export EDITOR="code --wait"
+
+# Set Git editors for interactive rebase operations
+# TODO swap based on environment (cursor vs code)
+export GIT_SEQUENCE_EDITOR="cursor --wait"
+export GIT_EDITOR="cursor --wait"
+export EDITOR="cursor --wait"
 
 WC_PKG="@vanta/web-client"
 # aliases
