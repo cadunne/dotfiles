@@ -27,6 +27,7 @@ alias ypp="yarn post-pull"
 alias mdwc='make dev-replace web-client'
 alias mdw='make dev-replace web'
 alias mds='make dev-storybook'
+alias story="make dev-storybook"
 
 # Functions
 login_link(){
